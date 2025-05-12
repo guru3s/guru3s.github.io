@@ -13,6 +13,7 @@
             --background: #f8fafc;
             --secondary-bg: #ffffff;
             --accent: #3b82f6;
+            --separator-color: #e2e8f0;
         }
         
         * {
@@ -131,6 +132,94 @@
             margin-bottom: 1rem;
         }
         
+        /* Section separator styles */
+        .section-separator {
+            height: 100px;
+            background-color: var(--background);
+            position: relative;
+            margin-top: -10px;
+        }
+        
+        .section-separator::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background-color: var(--separator-color);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+        
+        /* Video section styles */
+        .video-section {
+            padding: 2rem 0;
+            background-color: var(--separator-color);
+            text-align: center;
+        }
+        
+        .video-container {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        /* Fixed video-wrapper positioning */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        /* Fixed video overlay positioning */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+        
+        .video-overlay:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .play-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .video-player {
+            width: 100%;
+            display: block;
+            border-radius: 0.5rem;
+        }
+        
+        .video-description {
+            font-size: 1.125rem;
+            color: var(--light-text);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
         .subscription {
             padding: 6rem 0;
             text-align: center;
@@ -197,6 +286,19 @@
             .features-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .video-container {
+                width: 90%;
+            }
+            
+            .section-separator {
+                height: 60px;
+            }
+            
+            .play-button {
+                width: 60px;
+                height: 60px;
+            }
         }
         
         /* Success message styling for form */
@@ -211,6 +313,11 @@
         
         .show {
             display: block;
+        }
+        
+        /* Hide video controls when overlay is visible */
+        .hide-controls {
+            display: none;
         }
     </style>
 </head>
@@ -229,6 +336,30 @@
             <h1>Transform Your Trading Research</h1>
             <p class="tagline">Analyze markets smarter and faster with powerful backtesting tools and data-driven insights for traders of all experience levels</p>
             <button class="cta-button" onclick="scrollToSubscribe()">Join The Waitlist</button>
+        </div>
+    </section>
+
+    <!-- Add the concave separator here -->
+    <div class="section-separator"></div>
+
+    <section class="video-section">
+        <div class="container">
+            <h2>See How It Works</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <div class="video-overlay" id="videoOverlay">
+                        <div class="play-button">
+                            <svg viewBox="0 0 24 24" fill="white" width="64" height="64">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <video class="video-player" id="demoVideo" preload="none" poster="assets/video-thumbnail.jpg">
+                        <source src="assets/demo.webm" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
         </div>
     </section>
     
@@ -284,6 +415,10 @@
     <script>
         function scrollToSubscribe() {
             document.getElementById('subscribe').scrollIntoView({ behavior: 'smooth' });
+            // Add focus to the email input after scrolling
+            setTimeout(function() {
+                document.getElementById('email-input').focus();
+            }, 800); // Short delay to ensure scrolling completes
         }
         
         document.getElementById('email-form').addEventListener('submit', function(event) {
@@ -328,6 +463,24 @@
                 // Reset button
                 submitButton.disabled = false;
                 submitButton.textContent = 'Subscribe';
+            });
+        });
+        
+        // Video overlay functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoOverlay = document.getElementById('videoOverlay');
+            const demoVideo = document.getElementById('demoVideo');
+            
+            videoOverlay.addEventListener('click', function() {
+                videoOverlay.style.display = 'none';
+                demoVideo.controls = true;
+                demoVideo.play();
+            });
+            
+            // Reset overlay when video ends
+            demoVideo.addEventListener('ended', function() {
+                videoOverlay.style.display = 'flex';
+                demoVideo.controls = false;
             });
         });
     </script>
