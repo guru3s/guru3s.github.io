@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hidden Index</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f8faf9;
+      --ink: #141414;
+      --muted: #5f666d;
+      --line: #d8dee4;
+      --panel: #ffffff;
+      --accent: #0f766e;
+      --shadow: 0 18px 50px rgba(20, 20, 20, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    main { max-width: 940px; margin: 0 auto; padding: 54px 24px; }
+    .kicker {
+      color: var(--accent);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+    h1 { margin: 10px 0 12px; font-size: clamp(34px, 6vw, 62px); line-height: .98; letter-spacing: 0; }
+    h2 { margin: 28px 0 12px; font-size: 22px; letter-spacing: 0; }
+    p { color: var(--muted); max-width: 720px; font-size: 18px; }
+    ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    li a, .empty {
+      display: block;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--ink);
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(41, 33, 21, .05);
+    }
+    li a:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+    .path { display: block; color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .empty { color: var(--muted); border-style: dashed; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="kicker">Hidden Index</div>
+    <h1>Published files</h1>
+    <p>Private navigation list for the GitHub Pages site, including reports, Portkey research, static assets, and the plans section when plan pages exist.</p>
+
+    <h2>Pages</h2>
+    <ul>
+      <li><a href="/index.html">Home<span class="path">/index.html</span></a></li>
+      <li><a href="/pain/index.html">Pain Radar Index<span class="path">/pain/index.html</span></a></li>
+      <li><a href="/pain/2026-05-15.html">Pain Radar 2026-05-15<span class="path">/pain/2026-05-15.html</span></a></li>
+      <li><a href="/portkey/issues.html">Portkey Issue Radar<span class="path">/portkey/issues.html</span></a></li>
+      <li><a href="/hidden_index.html">Hidden Index<span class="path">/hidden_index.html</span></a></li>
+    </ul>
+
+    <h2>Plans</h2>
+    <div class="empty">No plan pages are currently published under /plans/. Add future plan HTML files here so they stay discoverable.</div>
+
+    <h2>Assets And Static Files</h2>
+    <ul>
+      <li><a href="/README.md">README<span class="path">/README.md</span></a></li>
+      <li><a href="/robots.txt">Robots<span class="path">/robots.txt</span></a></li>
+      <li><a href="/favicon.ico">Favicon<span class="path">/favicon.ico</span></a></li>
+      <li><a href="/logo.ico">Logo Icon<span class="path">/logo.ico</span></a></li>
+      <li><a href="/logo.png">Logo PNG<span class="path">/logo.png</span></a></li>
+      <li><a href="/placeholder.svg">Placeholder SVG<span class="path">/placeholder.svg</span></a></li>
+      <li><a href="/pixie_demo_final.mp4">Pixie Demo Video<span class="path">/pixie_demo_final.mp4</span></a></li>
+      <li><a href="/assets/index-CH42Ac46.css">Main CSS Bundle<span class="path">/assets/index-CH42Ac46.css</span></a></li>
+      <li><a href="/assets/index-JrFoz5Xe.js">Main JS Bundle<span class="path">/assets/index-JrFoz5Xe.js</span></a></li>
+      <li><a href="/assets/logo-CtD2TQpM.png">Bundled Logo<span class="path">/assets/logo-CtD2TQpM.png</span></a></li>
+    </ul>
+  </main>
+</body>
+</html>
