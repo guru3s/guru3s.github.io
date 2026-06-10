@@ -1,0 +1,1995 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentagon Unified Failure Intelligence Taxonomy</title>
+  <style>
+    :root {
+      --bg: #f5f3eb;
+      --surface: #ffffff;
+      --surface-soft: #fbfaf5;
+      --ink: #1f2933;
+      --muted: #667085;
+      --line: #d9ded6;
+      --line-strong: #b8c1b6;
+      --blue: #2563a8;
+      --red: #b42318;
+      --amber: #b76e00;
+      --green: #287a3e;
+      --teal: #087f76;
+      --violet: #6652b8;
+      --slate: #344054;
+      --shadow: 0 14px 30px rgba(31, 41, 51, 0.08);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: var(--blue);
+    }
+
+    .page-shell {
+      width: min(1380px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 50;
+      padding: 8px 10px;
+      background: var(--ink);
+      color: #ffffff;
+      border-radius: 6px;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: #f7f5ee;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 24px;
+      align-items: start;
+      padding: 30px 0 20px;
+    }
+
+    .kicker {
+      color: var(--teal);
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin-bottom: 12px;
+      font-size: 3.35rem;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 1.75rem;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    .lede {
+      max-width: 940px;
+      color: #475467;
+      font-size: 1.08rem;
+    }
+
+    .meta-card {
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .meta-card strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 0 0 22px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      min-height: 82px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .anchor-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(247, 245, 238, 0.96);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .anchor-nav .page-shell {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 0;
+      scrollbar-width: thin;
+    }
+
+    .nav-pill,
+    .control-button,
+    .legend-button {
+      min-height: 38px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--slate);
+      cursor: pointer;
+      font-weight: 750;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .nav-pill:hover,
+    .control-button:hover,
+    .legend-button:hover {
+      border-color: var(--teal);
+    }
+
+    main {
+      padding: 26px 0 58px;
+    }
+
+    section.block {
+      margin-bottom: 30px;
+    }
+
+    .section-intro {
+      max-width: 960px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .panel,
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .six-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .accent-blue {
+      border-top: 5px solid var(--blue);
+    }
+
+    .accent-red {
+      border-top: 5px solid var(--red);
+    }
+
+    .accent-amber {
+      border-top: 5px solid var(--amber);
+    }
+
+    .accent-green {
+      border-top: 5px solid var(--green);
+    }
+
+    .accent-teal {
+      border-top: 5px solid var(--teal);
+    }
+
+    .accent-violet {
+      border-top: 5px solid var(--violet);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .eyebrow {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .taxonomy-explorer {
+      display: grid;
+      grid-template-columns: 470px minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .wheel-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .wheel-frame {
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: min(390px, 100%);
+      aspect-ratio: 1;
+    }
+
+    #taxonomyWheel {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .wheel-slice {
+      cursor: pointer;
+      transition: transform 160ms ease, opacity 160ms ease, stroke-width 160ms ease;
+      transform-origin: center;
+      stroke: #ffffff;
+      stroke-width: 2;
+      outline: none;
+    }
+
+    .wheel-slice:hover,
+    .wheel-slice.is-active {
+      opacity: 0.94;
+      stroke-width: 5;
+    }
+
+    .wheel-slice:focus-visible {
+      stroke: #111827;
+      stroke-width: 5;
+    }
+
+    .wheel-center {
+      position: absolute;
+      inset: 31%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      padding: 18px;
+      box-shadow: 0 10px 20px rgba(31, 41, 51, 0.08);
+    }
+
+    .wheel-center strong {
+      display: block;
+      font-size: 1.02rem;
+      line-height: 1.15;
+      margin-bottom: 5px;
+    }
+
+    .wheel-center span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.25;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .legend-button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      text-align: left;
+      background: var(--surface);
+    }
+
+    .legend-button[aria-pressed="true"] {
+      color: #ffffff;
+      border-color: transparent;
+    }
+
+    .legend-dot {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 13px;
+      border-radius: 50%;
+      background: currentColor;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+    }
+
+    .detail-panel {
+      min-height: 430px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .detail-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .detail-title {
+      margin-bottom: 4px;
+      font-size: 1.55rem;
+    }
+
+    .badge,
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      border: 1px solid var(--line);
+      background: #f5f7f4;
+      color: var(--slate);
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip.has-tip {
+      position: relative;
+      cursor: help;
+      outline: none;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .chip.has-tip:before,
+    .chip.has-tip:after {
+      position: absolute;
+      left: 50%;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 4px);
+      transition: opacity 140ms ease, transform 140ms ease;
+      z-index: 40;
+    }
+
+    .chip.has-tip:before {
+      content: "";
+      bottom: calc(100% + 2px);
+      border: 6px solid transparent;
+      border-top-color: #1f2933;
+    }
+
+    .chip.has-tip:after {
+      content: attr(data-tooltip);
+      bottom: calc(100% + 14px);
+      width: max-content;
+      max-width: min(300px, 78vw);
+      white-space: normal;
+      background: #1f2933;
+      color: #ffffff;
+      border-radius: 6px;
+      padding: 8px 10px;
+      box-shadow: 0 12px 24px rgba(31, 41, 51, 0.18);
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .chip.has-tip:hover:before,
+    .chip.has-tip:hover:after,
+    .chip.has-tip:focus-visible:before,
+    .chip.has-tip:focus-visible:after {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .badge.signal {
+      color: var(--blue);
+      border-color: #bdd2ef;
+      background: #f3f8ff;
+    }
+
+    .badge.failure {
+      color: var(--red);
+      border-color: #f1c3bd;
+      background: #fff5f3;
+    }
+
+    .badge.root {
+      color: var(--amber);
+      border-color: #e9d19a;
+      background: #fff8e7;
+    }
+
+    .badge.fix {
+      color: var(--green);
+      border-color: #bcdcc4;
+      background: #f1fbf3;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .mini-panel {
+      min-height: 118px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .mini-panel strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.93rem;
+    }
+
+    .mini-panel span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .funnel {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .funnel-step {
+      min-height: 134px;
+      position: relative;
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--teal);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .funnel-step:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: var(--line-strong);
+    }
+
+    .funnel-step:last-child:after {
+      display: none;
+    }
+
+    .funnel-step strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .funnel-step span {
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .control-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .control-button {
+      padding: 8px 11px;
+      background: var(--surface);
+    }
+
+    .control-button[aria-pressed="true"] {
+      color: #ffffff;
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+
+    .search-input {
+      width: min(470px, 100%);
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 9px 11px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(8, 127, 118, 0.14);
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .catalog-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 300px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .catalog-card header {
+      border: 0;
+      background: transparent;
+    }
+
+    .catalog-card p {
+      color: var(--muted);
+      margin-bottom: 0;
+      font-size: 0.92rem;
+    }
+
+    .catalog-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .no-results {
+      display: none;
+      padding: 15px 16px;
+      border: 1px solid #e9d19a;
+      background: #fff8e7;
+      color: #624400;
+      border-radius: var(--radius);
+    }
+
+    .no-results.is-visible {
+      display: block;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      padding: 11px 12px;
+      border-bottom: 1px solid #e8ebe5;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f0eee5;
+      color: var(--slate);
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code,
+    .code-pill {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.88em;
+      background: #f2f4f2;
+      color: #26313d;
+      border: 1px solid #d9ded6;
+      border-radius: 6px;
+      padding: 1px 5px;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .story-list {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .story-button {
+      min-height: 48px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 800;
+    }
+
+    .story-button[aria-pressed="true"] {
+      color: #ffffff;
+      background: var(--slate);
+      border-color: var(--slate);
+    }
+
+    .story-panel {
+      min-height: 360px;
+      padding: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .story-lane {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .story-step {
+      min-height: 146px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-soft);
+    }
+
+    .story-step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .schema {
+      margin: 0;
+      white-space: pre-wrap;
+      background: #20262d;
+      color: #edf2f7;
+      border-radius: var(--radius);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .source-card {
+      min-height: 170px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .source-card strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .source-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 0;
+    }
+
+    footer {
+      padding: 20px 0 46px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1180px) {
+      .hero,
+      .taxonomy-explorer,
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-stats,
+      .grid.four,
+      .six-grid,
+      .source-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .funnel,
+      .story-lane,
+      .catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .funnel-step:after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        width: min(100% - 20px, 1380px);
+      }
+
+      .hero {
+        padding-top: 22px;
+      }
+
+      h1 {
+        font-size: 2.25rem;
+      }
+
+      h2 {
+        font-size: 1.45rem;
+      }
+
+      .quick-stats,
+      .grid.two,
+      .grid.three,
+      .grid.four,
+      .six-grid,
+      .source-grid,
+      .detail-grid,
+      .legend-grid,
+      .funnel,
+      .story-lane,
+      .catalog-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wheel-frame {
+        min-height: 340px;
+        padding: 12px;
+      }
+
+      .detail-panel {
+        min-height: 0;
+      }
+
+      .catalog-card,
+      .panel,
+      .card,
+      .story-panel {
+        padding: 14px;
+      }
+
+      th,
+      td {
+        padding: 9px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to taxonomy</a>
+
+  <header>
+    <div class="page-shell">
+      <div class="hero">
+        <div>
+          <div class="kicker">Agentagon unified taxonomy</div>
+          <h1>Failure intelligence from clue to verified fix.</h1>
+          <p class="lede">A merged, clearer taxonomy that combines the deep competitor-backed proposal with the observability synthesis. It keeps the four durable layers, adds strict boundaries, expands evidence coverage, and presents the model as an investigation flow engineers can actually use.</p>
+        </div>
+        <aside class="meta-card" aria-label="Document metadata">
+          <strong>Prepared June 10, 2026</strong>
+          Merges <code>agentagon-taxonomy-proposal.html</code> and <code>agentagon-observability-taxonomy-synthesis.html</code>. Source lessons include Agnost AI, Bento Labs, FutureAGI, OpenSRE, and Patronus AI.
+        </aside>
+      </div>
+
+      <div class="quick-stats" aria-label="Taxonomy summary">
+        <div class="stat"><strong>4</strong><span>Canonical taxonomies: Signals, Failure Modes, Root Causes, Fixes.</span></div>
+        <div class="stat"><strong>12</strong><span>Signal families grouped by investigation job, not just data source.</span></div>
+        <div class="stat"><strong>11</strong><span>Failure domains following the agent lifecycle, including observability health.</span></div>
+        <div class="stat"><strong>12</strong><span>Root-cause families mirrored by fix families for predictable remediation.</span></div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="anchor-nav" aria-label="Page sections">
+    <div class="page-shell">
+      <a class="nav-pill" href="#explore">Explore</a>
+      <a class="nav-pill" href="#funnel">Funnel</a>
+      <a class="nav-pill" href="#catalog">Catalog</a>
+      <a class="nav-pill" href="#boundaries">Boundaries</a>
+      <a class="nav-pill" href="#examples">Examples</a>
+      <a class="nav-pill" href="#schema">Schema</a>
+      <a class="nav-pill" href="#sources">Sources</a>
+    </div>
+  </nav>
+
+  <main id="main" class="page-shell">
+    <section id="explore" class="block">
+      <h2>Click The Taxonomy Wheel</h2>
+      <p class="section-intro">The model is easiest to remember as a cycle: evidence triggers investigation, the origin gets a failure label, the cause explains the layer to change, and the fix becomes a verified artifact that improves future detection.</p>
+      <div class="taxonomy-explorer">
+        <div class="wheel-panel">
+          <div class="wheel-frame">
+            <div class="wheel-wrap">
+              <svg id="taxonomyWheel" viewBox="-180 -180 360 360" role="img" aria-labelledby="wheelTitle wheelDesc">
+                <title id="wheelTitle">Agentagon taxonomy wheel</title>
+                <desc id="wheelDesc">Four clickable segments for Signals, Failure Modes, Root Causes, and Fixes.</desc>
+              </svg>
+              <div class="wheel-center">
+                <div>
+                  <strong id="wheelCenterTitle">Signals</strong>
+                  <span id="wheelCenterText">Observable clues that start and guide an investigation.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="wheelLegend" class="legend-grid" aria-label="Taxonomy wheel controls"></div>
+        </div>
+        <article id="layerDetail" class="detail-panel" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <section id="funnel" class="block">
+      <h2>Investigation Funnel</h2>
+      <p class="section-intro">Use this sequence in the product. It turns a noisy trace into a defensible recommendation without mixing symptoms, causes, impact, and fixes into one label.</p>
+      <div class="funnel" aria-label="Investigation workflow">
+        <div class="funnel-step"><strong>1. Signals</strong><span>Many cheap clues from spans, evals, users, changes, cohorts, systems, and evidence-health checks.</span></div>
+        <div class="funnel-step"><strong>2. Origin</strong><span>The earliest causally relevant node or entity where the run moved onto a bad path.</span></div>
+        <div class="funnel-step"><strong>3. Failure Mode</strong><span>The precise "what failed" label attached to that origin, not merely the final symptom.</span></div>
+        <div class="funnel-step"><strong>4. Root Cause</strong><span>The evidence-backed explanation of why the failure happened and which layer should change.</span></div>
+        <div class="funnel-step"><strong>5. Impact</strong><span>Customer visibility, correctness risk, recurrence, cost, fixability, and confidence.</span></div>
+        <div class="funnel-step"><strong>6. Fix</strong><span>Containment, durable artifact, owner, verification, guardrail metric, and rollback path.</span></div>
+        <div class="funnel-step"><strong>7. Learn</strong><span>Create or update a detector, eval, replay, monitor, memory, runbook, or taxonomy example.</span></div>
+      </div>
+    </section>
+
+    <section id="catalog" class="block">
+      <h2>Search The Merged Catalog</h2>
+      <p class="section-intro">The catalog below is intentionally flat and searchable. Switch layers or search for a leaf such as <code>fabricated_citation_or_url</code>, <code>collector_drop</code>, <code>tool_or_schema_gap</code>, or <code>citation_verifier</code>.</p>
+      <div class="control-bar" aria-label="Catalog controls">
+        <button class="control-button" type="button" data-layer-filter="signals" aria-pressed="true">Signals</button>
+        <button class="control-button" type="button" data-layer-filter="failures" aria-pressed="false">Failure Modes</button>
+        <button class="control-button" type="button" data-layer-filter="roots" aria-pressed="false">Root Causes</button>
+        <button class="control-button" type="button" data-layer-filter="fixes" aria-pressed="false">Fixes</button>
+        <input id="catalogSearch" class="search-input" type="search" placeholder="Search families, leaves, examples, fixes">
+        <span id="catalogCount" class="muted">12 items shown</span>
+      </div>
+      <div id="catalogNoResults" class="no-results">No taxonomy items match the current search.</div>
+      <div id="catalogGrid" class="catalog-grid"></div>
+    </section>
+
+    <section id="boundaries" class="block">
+      <h2>Boundary Rules</h2>
+      <p class="section-intro">The merged taxonomy stays intuitive because every label has one job. If a label answers more than one question, split it or move it to the right layer.</p>
+      <div class="grid two">
+        <article class="panel">
+          <h3>Classification Test</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>If The Label Says...</th>
+                  <th>It Is Probably...</th>
+                  <th>Examples</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>"We observed X"</td><td><span class="badge signal">Signal</span></td><td><code>citation_validation_fail</code>, <code>retry_storm</code>, <code>user_correction</code></td></tr>
+                <tr><td>"The agent or system did X wrong"</td><td><span class="badge failure">Failure mode</span></td><td><code>fabricated_citation_or_url</code>, <code>invalid_tool_arguments</code>, <code>premature_success</code></td></tr>
+                <tr><td>"Because layer Y was missing, stale, weak, or broken"</td><td><span class="badge root">Root cause</span></td><td><code>knowledge_or_retrieval_gap</code>, <code>workflow_or_orchestration_gap</code></td></tr>
+                <tr><td>"Add, change, gate, validate, roll back, or monitor Y"</td><td><span class="badge fix">Fix</span></td><td><code>citation_verifier</code>, <code>pre_call_validator</code>, <code>verification_gate</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+        <article class="panel">
+          <h3>Rename Ambiguous Labels</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Less Clear</th>
+                  <th>Use Instead</th>
+                  <th>Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><code>hallucination</code></td><td><code>unsupported_claim</code>, <code>wrong_factual_answer</code>, <code>fabricated_citation_or_url</code></td><td>Different evidence and fixes.</td></tr>
+                <tr><td><code>tool_misuse</code></td><td><code>wrong_tool_chosen</code>, <code>invalid_tool_arguments</code>, <code>tool_output_misinterpreted</code></td><td>Separates selection, calling, and interpretation.</td></tr>
+                <tr><td><code>bad_prompt</code></td><td><code>prompt_or_instruction_gap</code></td><td>That is a cause, not a failure mode.</td></tr>
+                <tr><td><code>add_guardrail</code></td><td><code>safety_or_governance_fix</code></td><td>That is a remediation artifact.</td></tr>
+                <tr><td><code>low_quality</code></td><td>Split by concrete failed behavior.</td><td>Too vague to route investigation.</td></tr>
+                <tr><td><code>missing_logs</code></td><td><code>missing_trace_context</code> or <code>measurement_or_evaluator_gap</code></td><td>Can be a failure mode or cause depending on origin.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Impact Is A Separate Lens</h2>
+      <p class="section-intro">Impact should not be encoded into the failure label. A rare safety leak and a common shallow answer both need prioritization, but they should be scored separately from taxonomy classification.</p>
+      <div class="grid six-grid">
+        <article class="card accent-teal"><h3>Customer Visibility</h3><p class="muted">Hidden, degraded, visible, blocking, user-escalated, or account-level.</p></article>
+        <article class="card accent-red"><h3>Correctness Risk</h3><p class="muted">Wrong, incomplete, unsafe, unsupported, noncompliant, or merely inefficient.</p></article>
+        <article class="card accent-violet"><h3>Recurrence</h3><p class="muted">Single trace, cluster, cohort spike, trend, release regression, or drift.</p></article>
+        <article class="card accent-blue"><h3>Cost And Tokens</h3><p class="muted">Latency, token burn, cache misses, tool spend, retries, and infra cost.</p></article>
+        <article class="card accent-green"><h3>Fixability</h3><p class="muted">Prompt, config, data, code, workflow, model, or product-level effort.</p></article>
+        <article class="card accent-amber"><h3>Confidence</h3><p class="muted">Evidence quality, localization certainty, evaluator agreement, and review status.</p></article>
+      </div>
+    </section>
+
+    <section id="examples" class="block">
+      <h2>End-To-End Examples</h2>
+      <p class="section-intro">These examples show how one incident moves across the four taxonomies without collapsing the concepts into a single enum.</p>
+      <div class="story-grid">
+        <div id="storyList" class="story-list" aria-label="Example incident controls"></div>
+        <article id="storyPanel" class="story-panel" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <section id="schema" class="block">
+      <h2>Compact Analysis Schema</h2>
+      <p class="section-intro">This schema mirrors the funnel. A reader should be able to see which signal fired, where the origin was, what failed, why it happened, how much it matters, what will change, and what the system learned.</p>
+      <pre class="schema">{
+  "analysis_id": "ana_...",
+  "trace_id": "tr_...",
+  "triage": {
+    "decision": "investigate",
+    "trigger_signals": [
+      {
+        "signal": "citation_validation_fail",
+        "family": "retrieval_and_grounding",
+        "scope": "answer_span",
+        "confidence": 0.94,
+        "evidence_refs": ["ev_url_check", "ev_retrieved_docs"]
+      }
+    ]
+  },
+  "origin_localization": {
+    "origin_node_id": "span_retrieve_policy_42",
+    "origin_node_type": "retriever",
+    "downstream_symptom_nodes": ["span_final_answer_57"],
+    "causal_path": ["span_retrieve_policy_42", "span_compose_answer_51", "span_final_answer_57"],
+    "localization_confidence": 0.86,
+    "ruled_out_origins": ["span_llm_plan_37", "span_url_validator_58"]
+  },
+  "failure_mode": {
+    "domain": "reasoning_correctness_and_grounding",
+    "leaf": "fabricated_citation_or_url",
+    "confidence": 0.88,
+    "supporting_signal_ids": ["sig_citation_validation_fail", "sig_user_correction"]
+  },
+  "root_causes": [
+    {
+      "family": "knowledge_or_retrieval_gap",
+      "causal_role": "direct_origin",
+      "claim": "Retriever selected a stale policy chunk without source freshness metadata.",
+      "confidence": 0.78,
+      "supporting_evidence": ["ev_retrieved_chunk", "ev_policy_version_diff"]
+    },
+    {
+      "family": "measurement_or_evaluator_gap",
+      "causal_role": "enabling_condition",
+      "claim": "Citation validation was non-blocking.",
+      "confidence": 0.69
+    }
+  ],
+  "impact": {
+    "customer_visibility": "visible",
+    "correctness_risk": "high",
+    "recurrence": "cluster_rising",
+    "cost_and_tokens": "neutral",
+    "fixability": "medium",
+    "assessment_confidence": 0.82
+  },
+  "fixes": [
+    {
+      "family": "retrieval_or_knowledge_fix",
+      "target_artifact": "citation_verifier",
+      "immediate_containment": "Suppress citations not present in retrieved source metadata.",
+      "durable_change": "Add source-version metadata and a blocking citation verifier before final response.",
+      "verification": {
+        "success_metric": "invalid_citation_rate < 0.1%",
+        "guardrail_metric": "answer_relevance_not_degraded"
+      },
+      "owner": "ai-quality",
+      "lifecycle_state": "candidate",
+      "rollback_plan": "Disable gate if false blocks exceed threshold."
+    }
+  ],
+  "learned_pattern": {
+    "new_or_updated_signal": "stale_source_version",
+    "new_eval": "rag_citation_regression",
+    "backfill_required": true,
+    "real_time_detection_candidate": true
+  }
+}</pre>
+    </section>
+
+    <section id="sources" class="block">
+      <h2>What Was Merged</h2>
+      <p class="section-intro">The original proposal supplied the deep taxonomy and competitor mapping. The synthesis supplied stricter layer boundaries, a better investigation funnel, expanded observability coverage, and cleaner product presentation.</p>
+      <div class="source-grid">
+        <article class="source-card">
+          <strong>Agnost AI</strong>
+          <p>User behavior, hidden product signals, custom intents, SOP violations, churn language, workaround hacks, and positive feedback as first-class telemetry.</p>
+        </article>
+        <article class="source-card">
+          <strong>Bento Labs</strong>
+          <p>Signals versus findings, drift, historical backfills, fix artifacts, measured lift, demotion, and regression monitoring.</p>
+        </article>
+        <article class="source-card">
+          <strong>FutureAGI</strong>
+          <p>Issue-feed workflow, trace clusters, span evidence, severity/status, score axes, state graphs, root causes, and immediate versus long-term fixes.</p>
+        </article>
+        <article class="source-card">
+          <strong>OpenSRE</strong>
+          <p>Incident RCA discipline, evidence provenance, log compaction, infra/runtime causes, causal chains, validated claims, and remediation steps.</p>
+        </article>
+        <article class="source-card">
+          <strong>Patronus AI</strong>
+          <p>Evaluator families, custom taxonomy definitions, insight cards, prompt fixes, safety scoring, and trace-level evidence fields.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page-shell">
+      Unified from <code>/Users/guru/Documents/agentagonai/agentagon-taxonomy-proposal.html</code> and <code>/Users/guru/Documents/agentagonai/agentagon-observability-taxonomy-synthesis.html</code>.
+    </div>
+  </footer>
+
+  <script>
+    const layers = [
+      {
+        id: "signals",
+        label: "Signals",
+        badge: "signal",
+        color: "#2563a8",
+        question: "What made us suspicious or helped us localize the issue?",
+        definition: "Observable clues from traces, evals, users, systems, changes, populations, governance, cost, and observability health.",
+        not: "A signal is not a diagnosis, root cause, or fix. It can be noisy and plural.",
+        use: "Run broadly, backfill historically, attach to spans or populations, and use for triage, localization, priority, and recurrence detection.",
+        fields: ["signal_name", "family", "scope", "value", "baseline", "confidence", "evidence_refs", "quality"],
+        examples: ["citation_validation_fail", "retry_storm", "user_correction", "collector_drop"]
+      },
+      {
+        id: "failures",
+        label: "Failure Modes",
+        badge: "failure",
+        color: "#b42318",
+        question: "What went wrong at the localized origin?",
+        definition: "The canonical behavior label attached to the earliest causally relevant node, not only the final symptom.",
+        not: "A failure mode is not a cause such as bad_prompt, a vague quality word, or a remediation suggestion.",
+        use: "Attach after origin localization so the label implies the evidence to inspect and the likely investigation path.",
+        fields: ["domain", "leaf", "origin_node_id", "origin_node_type", "downstream_symptoms", "confidence"],
+        examples: ["fabricated_citation_or_url", "premature_success", "memory_contamination", "missing_trace_context"]
+      },
+      {
+        id: "roots",
+        label: "Root Causes",
+        badge: "root",
+        color: "#b76e00",
+        question: "Why did that failure happen, and which layer should change?",
+        definition: "An actionable causal explanation with family, causal role, evidence, counter-evidence, confidence, and actionability.",
+        not: "A root cause is not a restatement of the failure mode and not the fix itself.",
+        use: "Rank direct origins, enabling conditions, amplifiers, confounders, downstream effects, and ruled-out alternatives.",
+        fields: ["family", "subtype", "causal_role", "claim", "confidence", "supporting_evidence", "refuting_evidence"],
+        examples: ["knowledge_or_retrieval_gap", "tool_or_schema_gap", "measurement_or_evaluator_gap"]
+      },
+      {
+        id: "fixes",
+        label: "Fixes",
+        badge: "fix",
+        color: "#287a3e",
+        question: "What change will we make, and how will we prove it worked?",
+        definition: "A structured remediation package with containment, durable artifact, verification, owner, risk, rollback, and learning.",
+        not: "A fix is not a loose recommendation sentence or a label without validation.",
+        use: "Mirror root-cause families so the suggested action feels predictable and can move through a lifecycle.",
+        fields: ["family", "target_artifact", "immediate_containment", "durable_change", "verification", "owner", "lifecycle_state"],
+        examples: ["citation_verifier", "pre_call_validator", "loop_breaker", "telemetry_completeness_monitor"]
+      }
+    ];
+
+    const signalFamilies = [
+      {
+        title: "Health and Availability",
+        question: "Is something down, degraded, saturated, or unhealthy?",
+        summary: "Classic operational signals that reveal failing dependencies or runtime saturation before semantic diagnosis begins.",
+        examples: ["error_rate_spike", "latency_spike", "timeout", "queue_growth", "slo_burn", "probe_failure"],
+        scope: "service, dependency, trace segment, release",
+        source: "OpenSRE plus FutureAGI runtime signals"
+      },
+      {
+        title: "Change and Version",
+        question: "Did something change near the failure window?",
+        summary: "Attribution clues for prompt, model, tool, schema, corpus, feature flag, and deployment regressions.",
+        examples: ["new_cluster_after_deploy", "prompt_version_regression", "model_version_shift", "flag_flip_near_failure", "schema_change_near_failure"],
+        scope: "release, cohort, cluster, artifact",
+        source: "Bento drift and backfill workflow"
+      },
+      {
+        title: "Trace Shape and Control Flow",
+        question: "Did the run take an abnormal path?",
+        summary: "Topology and sequence clues for localizing missing spans, unexpected branches, loops, and skipped verification.",
+        examples: ["missing_expected_span", "unexpected_branch", "repeated_same_tool_args", "retry_storm", "verification_span_missing"],
+        scope: "span, adjacent nodes, whole trace",
+        source: "FutureAGI state graphs and Patronus span trees"
+      },
+      {
+        title: "Context and State",
+        question: "Did the agent carry, lose, mutate, or overload state?",
+        summary: "Signals for context-window stress, requirement loss, prompt bloat, stale state, and long-run attention drift.",
+        examples: ["context_saturation", "requirement_dropped", "state_inconsistency", "instruction_position_drift", "prompt_bloat"],
+        scope: "prompt, state object, memory injection, long trace",
+        source: "Bento instruction drift and Agentagon trace contract"
+      },
+      {
+        title: "Retrieval and Grounding",
+        question: "Was evidence missing, stale, irrelevant, or unsupported?",
+        summary: "Grounding clues that connect retrieval, selected context, citations, and final claims.",
+        examples: ["retrieval_absent_when_needed", "low_context_relevance", "wrong_chunk_selected", "stale_source_version", "citation_validation_fail"],
+        scope: "retriever node, context edge, answer span",
+        source: "Patronus RAG evals and Agnost citation guard"
+      },
+      {
+        title: "Tool, API, and Runtime",
+        question: "Did execution fail or behave abnormally?",
+        summary: "Tool and dependency signals that separate execution failure from bad agent decision-making.",
+        examples: ["schema_validation_fail", "auth_fail", "rate_limit", "resource_exhaustion", "upstream_5xx", "partial_side_effect"],
+        scope: "tool node, dependency edge, runtime span",
+        source: "OpenSRE log taxonomy and Patronus system errors"
+      },
+      {
+        title: "Output and Evaluator",
+        question: "Did the response or action fail a check?",
+        summary: "Downstream symptom signals from parsers, judges, custom rules, safety checks, and gold-answer comparisons.",
+        examples: ["format_parse_fail", "grounding_score_drop", "custom_rule_violation", "safety_guardrail_fire", "gold_answer_mismatch"],
+        scope: "output span, evaluator node, guardrail node",
+        source: "FutureAGI scores and Patronus evaluators"
+      },
+      {
+        title: "User and Outcome",
+        question: "Did users reveal quality problems telemetry missed?",
+        summary: "Human behavior and business clues such as corrections, rephrases, abandonment, frustration, churn, and workarounds.",
+        examples: ["user_correction", "prompt_rephrase", "abandonment", "frustration_language", "workaround_hack", "delegation_drop"],
+        scope: "conversation, session, account, cohort",
+        source: "Agnost semantic product analytics"
+      },
+      {
+        title: "Population, Drift, and Recurrence",
+        question: "Is a pattern emerging or recurring?",
+        summary: "Backfill and trend signals for detecting clusters, baseline drift, version regressions, recurrence, and negative lift.",
+        examples: ["cohort_spike", "baseline_drift", "previously_passing_case_failed", "negative_lift", "recurrence_after_fix"],
+        scope: "historical traffic, cohort, cluster, release",
+        source: "Bento signals and FutureAGI clusters"
+      },
+      {
+        title: "Cost and Efficiency",
+        question: "Did the run succeed expensively or inefficiently?",
+        summary: "Signals for latency, token burn, tool-call bloat, cache misses, and cost per successful outcome.",
+        examples: ["token_spike", "cache_hit_drop", "expensive_query", "tool_call_bloat", "cost_per_success_spike"],
+        scope: "span, trace, cohort, account",
+        source: "FutureAGI tokens/cost plus Bento lift measurement"
+      },
+      {
+        title: "Governance and Safety",
+        question: "Was a policy, permission, approval, or sensitive-data boundary involved?",
+        summary: "Signals for security posture, audit gaps, policy denials, injection attempts, and sensitive-data exposure.",
+        examples: ["approval_gate_skipped", "policy_denial", "pii_scan_hit", "prompt_injection_detected", "audit_gap"],
+        scope: "action, tool, policy, audit trail",
+        source: "OpenSRE controls and Patronus safety scoring"
+      },
+      {
+        title: "Observability Health",
+        question: "Can we trust the evidence system itself?",
+        summary: "Signals that instrumentation, ingestion, sampling, alerting, or evaluator calibration may be hiding the truth.",
+        examples: ["collector_drop", "trace_context_missing", "ingest_lag", "sampling_blind_spot", "eval_drift", "alert_delivery_failure"],
+        scope: "telemetry pipeline, dashboard, evaluator, alert",
+        source: "Observability synthesis addition"
+      }
+    ];
+
+    const failureDomains = [
+      {
+        title: "Intent, Requirements, and Scope",
+        question: "Did we understand the job?",
+        summary: "The agent misunderstands the task, misses constraints, over-asks, or handles unsupported requests as if they were supported.",
+        examples: ["wrong_intent", "missed_requirement", "scope_drift", "over_clarification", "unsupported_request_handled_as_supported", "shallow_execution"],
+        evidence: "Original request, inferred intent, extracted requirements, correction, follow-up density."
+      },
+      {
+        title: "Retrieval, Context, and Memory",
+        question: "Did we use the right information?",
+        summary: "The agent does not retrieve needed knowledge, retrieves wrong or stale context, drops requirements, or uses harmful memory.",
+        examples: ["no_retrieval_when_needed", "poor_or_wrong_chunk_used", "stale_context_used", "context_dropped_or_attention_drift", "memory_contamination", "preference_or_profile_not_applied"],
+        evidence: "Retrieval spans, selected chunks, token position, memory trigger, preference record."
+      },
+      {
+        title: "Reasoning, Correctness, and Grounding",
+        question: "Did we infer or answer correctly?",
+        summary: "The response is false, unsupported, contradictory, badly transformed, stale, or cites fabricated sources.",
+        examples: ["unsupported_claim", "wrong_factual_answer", "fabricated_citation_or_url", "contradiction", "bad_summary_or_transformation", "tool_output_misinterpreted"],
+        evidence: "Claim text, source of truth, retrieved chunks, verifier result, user correction."
+      },
+      {
+        title: "Planning, Orchestration, and Control",
+        question: "Did we choose the right path?",
+        summary: "The agent chooses the wrong tool path, skips prerequisites, loops, declares success early, or hands off poorly.",
+        examples: ["wrong_tool_chosen", "step_disorder", "redundant_loop_or_resource_abuse", "premature_success", "bad_handoff", "missing_verification"],
+        evidence: "Actual step order, expected workflow, repeated calls, missing gate, verification span."
+      },
+      {
+        title: "Tool, API, and Side-Effect Execution",
+        question: "Did the action execute correctly?",
+        summary: "Concrete execution failures including bad arguments, unavailable tools, auth, quota, timeout, upstream failure, and partial side effects.",
+        examples: ["invalid_or_missing_tool_args", "tool_missing_or_misconfigured", "auth_permission_or_secret_failure", "rate_limit_or_quota", "timeout_or_resource_exhaustion", "upstream_service_failure", "partial_side_effect"],
+        evidence: "Tool schema, attempted args, status code, dependency timeline, side-effect audit."
+      },
+      {
+        title: "Instruction, Format, and Contract Compliance",
+        question: "Did we follow explicit rules?",
+        summary: "The agent violates response format, domain rules, SOPs, escalation thresholds, disclosure rules, or product boundaries.",
+        examples: ["invalid_output_contract", "instruction_noncompliance", "custom_domain_rule_violation", "escalation_protocol_missed", "disclosure_or_boundary_failure"],
+        evidence: "Contract, parser error, rule definition, violating span, missed handoff point."
+      },
+      {
+        title: "Safety, Security, Privacy, and Control",
+        question: "Did we violate a protected boundary?",
+        summary: "Failures that leak sensitive data, expose secrets, give unsafe regulated advice, obey injection, or skip approval and audit.",
+        examples: ["pii_phi_or_sensitive_data_leak", "secret_or_token_exposure", "unsafe_regulated_advice", "prompt_injection_or_jailbreak_success", "missing_approval_or_audit_gate", "unauthorized_action"],
+        evidence: "Masked leaked span, policy rule, action risk, missing approval, audit trail gap."
+      },
+      {
+        title: "User Experience, Trust, and Product Value",
+        question: "Did the result fail the user's real expectation?",
+        summary: "No exception occurred, but the product failed the user through confusion, low utility, missed plan path, setup friction, or trust reset.",
+        examples: ["user_frustration_or_confusion", "low_utility_answer", "confident_wrongness", "churn_or_trust_reset", "missed_upsell_or_plan_path", "feature_request_or_integration_gap", "setup_friction_or_underuse"],
+        evidence: "Conversation segment, sentiment, abandonment, support ticket, plan matrix, account behavior."
+      },
+      {
+        title: "Performance, Cost, and Efficiency",
+        question: "Did we spend too much time, budget, or context?",
+        summary: "The answer may pass but the trace burns latency, tokens, retries, context, tool calls, or dependency budget.",
+        examples: ["latency_slo_breach", "cost_or_token_spike", "silent_loop", "unnecessary_tool_or_context_use", "retry_burn"],
+        evidence: "Span waterfall, token histogram, repeated states, cache hit rate, cost by span."
+      },
+      {
+        title: "Learning, Evaluation, and Regression",
+        question: "Did our improvement or measurement system fail?",
+        summary: "A fix, evaluator, prompt, model, memory, or detector regressed, drifted, overfit, or created negative lift.",
+        examples: ["evaluator_false_pass", "evaluator_false_fail", "deploy_or_version_regression", "behavioral_drift", "evaluator_or_taxonomy_drift", "artifact_negative_lift", "cold_start_pattern_confusion"],
+        evidence: "Version diff, before/after score, reviewer disagreement, artifact lift, sample count."
+      },
+      {
+        title: "Observability and Evidence Capture",
+        question: "Did we fail to capture enough truth?",
+        summary: "The incident cannot be trusted or resolved because traces, logs, spans, alerts, sampling, schemas, or dashboards are incomplete or wrong.",
+        examples: ["missing_trace_context", "missing_required_span", "broken_alert", "bad_dashboard_or_eval", "sampling_hid_failure", "telemetry_schema_drift", "evidence_redaction_gap"],
+        evidence: "Collector health, missing span map, sampling policy, ingest lag, dashboard query, redaction rule."
+      }
+    ];
+
+    const rootFamilies = [
+      ["prompt_or_instruction_gap", "Instructions, examples, hierarchy, boundaries, or output contracts are missing or ambiguous.", "unsupported_claim, invalid_output_contract, instruction_noncompliance", "prompt_or_spec_fix"],
+      ["intent_or_requirement_model_gap", "The system does not reliably extract user intent, constraints, or success criteria.", "wrong_intent, missed_requirement, scope_drift, shallow_execution", "intent_or_requirement_fix"],
+      ["workflow_or_orchestration_gap", "The agent needs better state, order, gates, handoff, retries, stop conditions, or verification.", "step_disorder, premature_success, redundant_loop, bad_handoff", "workflow_or_state_fix"],
+      ["tool_or_schema_gap", "Tool descriptions, schemas, required args, validators, wrappers, or result contracts are weak.", "wrong_tool_chosen, invalid_tool_arguments, tool_output_misinterpreted", "tool_or_contract_fix"],
+      ["knowledge_or_retrieval_gap", "Data is missing, stale, poorly chunked, poorly ranked, conflicting, or unverifiable.", "wrong_chunk_used, stale_context_used, unsupported_claim", "retrieval_or_knowledge_fix"],
+      ["memory_or_personalization_gap", "Durable memory is missing, stale, over-triggered, contaminated, or harmful.", "memory_contamination, missing_memory, stale_memory_artifact", "memory_or_learning_fix"],
+      ["model_capability_or_routing_gap", "The selected model or route is not strong, stable, cheap, fast, or aligned enough for the task.", "wrong_factual_answer, poor_reasoning, unhelpful_refusal", "model_or_routing_fix"],
+      ["runtime_dependency_or_config_gap", "Infrastructure, dependency, auth, quota, deploy, resource, or environment failed.", "timeout, rate_limit, auth_failure, tool_unavailable", "runtime_or_dependency_fix"],
+      ["policy_safety_or_governance_gap", "Permissions, approval, redaction, audit, DLP, or policy enforcement is missing or wrong.", "pii_leak, unauthorized_action, approval_gate_skipped", "safety_or_governance_fix"],
+      ["measurement_or_evaluator_gap", "The product cannot detect, score, validate, or explain the failure reliably.", "evaluator_false_pass, broken_alert, missing_trace_context", "measurement_or_instrumentation_fix"],
+      ["change_release_or_versioning_gap", "A deploy, flag, config, prompt, model, schema, corpus, or tool changed without enough guardrails.", "prompt_regression, model_regression, new_cluster_after_deploy", "change_release_or_versioning_fix"],
+      ["product_or_user_journey_gap", "The issue is caused by expectations, onboarding, plan limits, support flow, or UX.", "low_utility_answer, trust_reset_event, over_clarification", "product_or_experience_fix"]
+    ].map(([title, summary, examples, fix]) => ({ title, summary, examples: examples.split(", "), fix }));
+
+    const fixFamilies = [
+      ["prompt_or_spec_fix", "Add a narrow instruction or safer template.", "Versioned prompt fragment, examples, schema contract, policy fragment.", "Golden cases, instruction evaluator, parser test."],
+      ["intent_or_requirement_fix", "Ask one targeted clarification or route ambiguous high-risk tasks.", "Requirement extractor, task rubric, intent router, success criteria model.", "Intent labels, missed-requirement eval, user correction rate."],
+      ["workflow_or_state_fix", "Force safer path, manual review, or stop after retry budget.", "State machine, prerequisite gate, completion gate, handoff contract, loop breaker.", "Trace replay with expected node order and verification span."],
+      ["tool_or_contract_fix", "Block malformed calls and surface safe failure.", "Tool wrapper, schema validator, arg assembler, result normalizer, idempotency key.", "Tool-call fixtures, contract tests, recovery-path replay."],
+      ["retrieval_or_knowledge_fix", "Abstain or cite only verified retrieved sources.", "KB update, chunking/reranking, freshness metadata, source versioning, citation verifier.", "RAG recall, relevance, faithfulness, citation, and freshness eval."],
+      ["memory_or_learning_fix", "Disable or demote harmful memory for affected cohorts.", "Trigger rewrite, confidence threshold, measured-lift tracking, expiry policy.", "Replay with and without memory, lift monitor, negative-lift alert."],
+      ["model_or_routing_fix", "Route high-risk task to stronger model or human review.", "Model router, decomposition strategy, verifier, fine-tune dataset, fallback policy.", "A/B eval, latency/cost/quality tradeoff, regression suite."],
+      ["runtime_or_dependency_fix", "Retry, backoff, fallback, rollback, or degrade gracefully.", "Circuit breaker, health check, config gate, secret rotation monitor, quota alert.", "Fault injection, dependency SLO, recovery-path replay."],
+      ["safety_or_governance_fix", "Block action, redact data, or require approval.", "Guardrail, DLP policy, RBAC, approval workflow, audit trail.", "Policy evals, DLP fixtures, approval-gate regression."],
+      ["measurement_or_instrumentation_fix", "Mark incident inconclusive and collect missing evidence manually.", "New span/log/metric/eval, schema rule, sampling policy, dashboard/alert repair.", "Telemetry completeness, trace/log correlation, eval calibration."],
+      ["change_release_or_versioning_fix", "Roll back, disable flag, freeze version, or pause rollout.", "Canary, version diffing, release gate, prompt/model/schema migration checks.", "Before/after SLOs, eval regression, canary comparison."],
+      ["product_or_experience_fix", "Escalate to support/sales or explain limitation clearly.", "Onboarding, plan matrix, support flow, product UX/content change.", "User correction, abandonment, support ticket, conversion/churn metrics."]
+    ].map(([title, containment, durable, verification]) => ({ title, containment, durable, verification }));
+
+    const causalRoles = [
+      "direct_origin",
+      "enabling_condition",
+      "amplifier",
+      "downstream_effect",
+      "confounder",
+      "ruled_out"
+    ];
+
+    const examples = [
+      {
+        title: "Fabricated citation",
+        summary: "The final answer cites a URL that was not in the retrieved set and returns 404.",
+        signals: ["citation_validation_fail", "user_correction", "stale_source_version"],
+        origin: "Retriever selected a stale policy chunk and final answer trusted it.",
+        failure: "fabricated_citation_or_url",
+        root: "knowledge_or_retrieval_gap plus measurement_or_evaluator_gap as enabling condition",
+        fix: "retrieval_or_knowledge_fix with blocking citation verifier and source-version metadata"
+      },
+      {
+        title: "Wrong tool arguments",
+        summary: "The agent picks the right tool but passes a customer id from a prior turn.",
+        signals: ["schema_validation_fail", "state_inconsistency", "user_correction"],
+        origin: "Argument assembler reads stale state instead of current entity binding.",
+        failure: "invalid_or_missing_tool_args",
+        root: "tool_or_schema_gap plus workflow_or_orchestration_gap",
+        fix: "tool_or_contract_fix with typed state object, pre-call validator, and contract tests"
+      },
+      {
+        title: "Premature success",
+        summary: "The agent says the migration is complete before tests or required checks run.",
+        signals: ["verification_span_missing", "finalizer_called_early", "missed_requirement"],
+        origin: "Completion gate is absent from the workflow.",
+        failure: "premature_success",
+        root: "workflow_or_orchestration_gap",
+        fix: "workflow_or_state_fix with required verification span and replay eval"
+      },
+      {
+        title: "Repeated costly loop",
+        summary: "The trace keeps calling the same tool with the same args and no new information.",
+        signals: ["repeated_same_tool_args", "token_spike", "cost_per_success_spike"],
+        origin: "Planner lacks novelty check and retry budget.",
+        failure: "redundant_loop_or_resource_abuse",
+        root: "workflow_or_orchestration_gap with model_capability_or_routing_gap as amplifier",
+        fix: "workflow_or_state_fix with loop breaker, attempt cache, and terminal-error classifier"
+      },
+      {
+        title: "Missing evidence",
+        summary: "The system cannot decide whether a failure is real because the required span is absent.",
+        signals: ["collector_drop", "missing_required_span", "sampling_blind_spot"],
+        origin: "Instrumentation dropped tool-result spans for sampled traffic.",
+        failure: "missing_trace_context",
+        root: "measurement_or_evaluator_gap",
+        fix: "measurement_or_instrumentation_fix with telemetry completeness monitor and sampling policy update"
+      }
+    ];
+
+    const chipDescriptions = {
+      signal_name: "The canonical machine-readable name of the signal that fired.",
+      family: "The group this label belongs to, used for navigation and reporting.",
+      scope: "Where the evidence applies: span, trace, session, cohort, release, or incident.",
+      value: "The measured signal value, such as true, count, score, rate, or delta.",
+      baseline: "The normal value this signal is compared against.",
+      confidence: "How strongly the available evidence supports this label.",
+      evidence_refs: "Links to spans, events, logs, metrics, evaluator results, or user actions.",
+      quality: "Freshness, completeness, sampling status, and trustworthiness of the evidence.",
+      domain: "The failure-mode group, such as planning, grounding, or safety.",
+      leaf: "The most specific failure-mode label assigned to the origin.",
+      origin_node_id: "The trace node where the issue first became causal.",
+      origin_node_type: "The kind of origin node, such as LLM, retriever, tool, memory, or evaluator.",
+      downstream_symptoms: "Later visible effects caused by the origin.",
+      subtype: "A narrower explanation inside a root-cause family.",
+      causal_role: "Whether the cause was direct, enabling, amplifying, downstream, confounding, or ruled out.",
+      claim: "The evidence-backed causal statement the investigation is making.",
+      supporting_evidence: "Evidence that supports the causal explanation.",
+      refuting_evidence: "Evidence that argues against the causal explanation.",
+      target_artifact: "The concrete thing to change, such as a prompt, tool wrapper, monitor, or policy.",
+      immediate_containment: "A quick action that limits current user impact.",
+      durable_change: "The lasting product, code, data, prompt, or workflow change.",
+      verification: "How Agentagon proves the fix helped without causing a regression.",
+      owner: "The team or person accountable for taking the fix through its lifecycle.",
+      lifecycle_state: "The fix stage, such as candidate, shadow, validated, promoted, monitored, or rolled back.",
+
+      error_rate_spike: "Errors rose above normal for a service, model call, tool, or dependency.",
+      latency_spike: "A trace, tool, or dependency became unusually slow.",
+      timeout: "A call or step exceeded its allowed time budget.",
+      queue_growth: "Work is backing up faster than it is being processed.",
+      slo_burn: "The system is consuming its reliability error budget too quickly.",
+      probe_failure: "A health check or readiness check failed.",
+      new_cluster_after_deploy: "A new failure cluster appeared soon after a release.",
+      prompt_version_regression: "A prompt change made previously passing behavior fail.",
+      model_version_shift: "Behavior changed after a model version or route changed.",
+      flag_flip_near_failure: "A feature flag changed near the failure window.",
+      schema_change_near_failure: "A tool, API, data, or output schema changed near the incident.",
+      missing_expected_span: "A trace is missing a step that should normally appear.",
+      unexpected_branch: "The agent took a path that differs from the expected workflow.",
+      repeated_same_tool_args: "The agent called a tool repeatedly with effectively identical arguments.",
+      retry_storm: "Retries multiplied without recovery and likely increased cost or latency.",
+      verification_span_missing: "The trace lacks the check that should prove the result is correct.",
+      context_saturation: "The context window is too full, making important instructions or facts easier to lose.",
+      requirement_dropped: "A user requirement was captured earlier but missing from later reasoning or output.",
+      state_inconsistency: "The agent's stored state disagrees with the user request, tool output, or prior step.",
+      instruction_position_drift: "Important instructions moved into a weaker part of a long prompt or context.",
+      prompt_bloat: "The prompt grew large or noisy enough to hurt quality, latency, or cost.",
+      retrieval_absent_when_needed: "The agent answered without retrieval even though external knowledge was required.",
+      low_context_relevance: "Retrieved context scored poorly against what the task actually needed.",
+      wrong_chunk_selected: "The retriever found or chose the wrong document chunk.",
+      stale_source_version: "The answer used an outdated source, policy, index, or cached document.",
+      citation_validation_fail: "A cited source was missing, invalid, unrelated, or not present in retrieved evidence.",
+      schema_validation_fail: "A tool call, response, or artifact failed its expected schema.",
+      auth_fail: "Authentication failed, usually from an expired token, missing secret, or bad credential.",
+      rate_limit: "A provider, API, model, or dependency rejected calls because quota was exceeded.",
+      resource_exhaustion: "The run hit memory, disk, compute, token, context, or worker limits.",
+      upstream_5xx: "A dependency returned a server-side failure.",
+      partial_side_effect: "An action partly completed, leaving product state ambiguous or inconsistent.",
+      format_parse_fail: "The output could not be parsed into the expected format.",
+      grounding_score_drop: "A grounding evaluator found the answer less supported by evidence than expected.",
+      custom_rule_violation: "A product-specific rule, SOP, or customer policy was violated.",
+      safety_guardrail_fire: "A safety policy detected risky or disallowed content or action.",
+      gold_answer_mismatch: "The output disagreed with a known expected answer.",
+      user_correction: "The user corrected the agent, revealing a quality or understanding problem.",
+      prompt_rephrase: "The user had to ask again in a different way to get the right result.",
+      abandonment: "The user left or stopped the workflow after the agent response.",
+      frustration_language: "The user expressed confusion, annoyance, or lost confidence.",
+      workaround_hack: "The user found a manual workaround because the agent path failed.",
+      delegation_drop: "The user gives the agent fewer or safer tasks after a failure.",
+      cohort_spike: "A failure rate increased for a specific customer, segment, or use case.",
+      baseline_drift: "Normal behavior shifted over time, even without a single obvious incident.",
+      previously_passing_case_failed: "A known-good replay, eval, or customer pattern now fails.",
+      negative_lift: "A supposedly helpful artifact made outcomes worse.",
+      recurrence_after_fix: "The same pattern returned after a fix was shipped.",
+      token_spike: "Token usage jumped above the normal range.",
+      cache_hit_drop: "The system reused cached context or results less often than expected.",
+      expensive_query: "A query or retrieval step costs unusually much relative to its value.",
+      tool_call_bloat: "The agent used more tool calls than the task should require.",
+      cost_per_success_spike: "Cost rose per successful task, even if raw success rate stayed acceptable.",
+      approval_gate_skipped: "A high-risk action happened without the required approval step.",
+      policy_denial: "A policy blocked or should have blocked the action or response.",
+      pii_scan_hit: "A detector found personal, health, financial, or other sensitive data.",
+      prompt_injection_detected: "Untrusted content attempted to override instructions or trigger unsafe tool use.",
+      audit_gap: "The trace lacks the audit record needed to explain or approve an action.",
+      collector_drop: "Telemetry collection lost events, spans, logs, or metrics.",
+      trace_context_missing: "The trace lacks identifiers or context needed to connect related spans.",
+      ingest_lag: "Telemetry arrived too late to support real-time diagnosis.",
+      sampling_blind_spot: "Sampling hid the traces needed to see the incident clearly.",
+      eval_drift: "An evaluator's judgments changed or became misaligned with human review.",
+      alert_delivery_failure: "A valid alert did not reach the right person or channel.",
+
+      wrong_intent: "The agent inferred the wrong task or business intent.",
+      missed_requirement: "A stated constraint or expected deliverable was omitted.",
+      scope_drift: "The agent moved away from the user's intended scope.",
+      over_clarification: "The agent asked unnecessary questions instead of acting on reasonable assumptions.",
+      unsupported_request_handled_as_supported: "The agent attempted a task it could not actually complete safely or correctly.",
+      shallow_execution: "The agent did the literal minimum but missed the useful next step.",
+      no_retrieval_when_needed: "The task needed external knowledge, but no retrieval occurred.",
+      poor_or_wrong_chunk_used: "The answer relied on low-quality or irrelevant retrieved context.",
+      stale_context_used: "The answer used context that is no longer current.",
+      context_dropped_or_attention_drift: "Important context was lost, truncated, or ignored later in the run.",
+      memory_contamination: "A stored memory or learned artifact hurt the result.",
+      preference_or_profile_not_applied: "A known user or account preference was ignored.",
+      unsupported_claim: "The answer made a claim not supported by available evidence.",
+      wrong_factual_answer: "The answer is factually incorrect against the source of truth.",
+      fabricated_citation_or_url: "The answer invented or misused a citation, link, or source.",
+      contradiction: "The output conflicts with itself, prior facts, or retrieved evidence.",
+      bad_summary_or_transformation: "A summary, extraction, rewrite, or conversion dropped or added important facts.",
+      tool_output_misinterpreted: "The tool result was available but read or applied incorrectly.",
+      wrong_tool_chosen: "The agent selected the wrong tool or action path.",
+      step_disorder: "Steps happened in the wrong order for the workflow.",
+      redundant_loop_or_resource_abuse: "The agent repeated work without new information or progress.",
+      premature_success: "The agent declared completion before requirements or checks passed.",
+      bad_handoff: "A transfer to another agent, tool, or human lost necessary context.",
+      missing_verification: "The expected final check was skipped.",
+      invalid_or_missing_tool_args: "A tool call had missing, stale, malformed, or wrong arguments.",
+      tool_missing_or_misconfigured: "A required tool was unavailable, unregistered, or configured incorrectly.",
+      auth_permission_or_secret_failure: "The action failed because credentials, permissions, or secrets were wrong.",
+      rate_limit_or_quota: "The dependency rejected the action due to limit or quota.",
+      timeout_or_resource_exhaustion: "The run stalled or exceeded resource budgets.",
+      upstream_service_failure: "An external service or dependency failed.",
+      invalid_output_contract: "The output violated a required schema, format, or machine contract.",
+      instruction_noncompliance: "The agent ignored or violated explicit instructions.",
+      escalation_protocol_missed: "The agent failed to hand off after repeated or high-risk failure.",
+      disclosure_or_boundary_failure: "The response crossed a disclosure, capability, or scope boundary.",
+      pii_phi_or_sensitive_data_leak: "The response exposed personal, health, or sensitive data.",
+      secret_or_token_exposure: "A credential, API key, token, or secret appeared in output or traces.",
+      unsafe_regulated_advice: "The response gave unsafe medical, legal, financial, or other regulated advice.",
+      prompt_injection_or_jailbreak_success: "Untrusted content successfully changed agent behavior or tool use.",
+      missing_approval_or_audit_gate: "A risky action lacked approval, RBAC, or auditability.",
+      unauthorized_action: "The agent acted beyond the user's permission or policy.",
+      user_frustration_or_confusion: "The interaction made the user confused, annoyed, or less trusting.",
+      low_utility_answer: "The answer was technically responsive but not useful enough.",
+      confident_wrongness: "The agent sounded certain while being wrong.",
+      churn_or_trust_reset: "A failure caused reduced usage, cancellation language, or manual double-checking.",
+      missed_upsell_or_plan_path: "The agent missed a legitimate paid-feature or plan-upgrade path.",
+      feature_request_or_integration_gap: "Users repeatedly ask for a missing feature, integration, or workflow.",
+      setup_friction_or_underuse: "Onboarding or configuration problems prevent the user from reaching value.",
+      latency_slo_breach: "Latency exceeded the product's target for the workflow.",
+      cost_or_token_spike: "Cost or token usage rose beyond expected limits.",
+      silent_loop: "The agent kept working without useful visible progress.",
+      unnecessary_tool_or_context_use: "The agent used tools or context that were not needed.",
+      retry_burn: "Retries consumed time or money without a reasonable recovery path.",
+      evaluator_false_pass: "The evaluator passed a bad result.",
+      evaluator_false_fail: "The evaluator failed an acceptable result.",
+      deploy_or_version_regression: "A release caused behavior that previously worked to fail.",
+      behavioral_drift: "Behavior changed gradually over time or traffic mix.",
+      evaluator_or_taxonomy_drift: "Labels or evaluator judgments no longer match product reality.",
+      artifact_negative_lift: "A prompt, memory, skill, detector, or fix made outcomes worse.",
+      cold_start_pattern_confusion: "The system guessed a pattern from too little evidence.",
+      missing_trace_context: "The trace lacks enough context to reconstruct what happened.",
+      missing_required_span: "A span that should prove or explain the run is absent.",
+      broken_alert: "An alert is missing, noisy, wrong, or not actionable.",
+      bad_dashboard_or_eval: "The dashboard or eval misrepresents product reality.",
+      sampling_hid_failure: "Sampling removed the evidence needed to catch the issue.",
+      telemetry_schema_drift: "Telemetry fields changed in a way that broke analysis.",
+      evidence_redaction_gap: "Evidence is either over-redacted or insufficiently protected.",
+
+      prompt_or_instruction_gap: "The fix belongs in clearer instructions, examples, hierarchy, or output contracts.",
+      intent_or_requirement_model_gap: "The system needs better intent, constraint, or success-criteria extraction.",
+      workflow_or_orchestration_gap: "The workflow needs better state, gates, ordering, retries, or stop conditions.",
+      tool_or_schema_gap: "Tool descriptions, schemas, wrappers, or validators are weak.",
+      knowledge_or_retrieval_gap: "Knowledge is missing, stale, poorly ranked, conflicting, or unverifiable.",
+      memory_or_personalization_gap: "Memory or personalization is missing, stale, over-triggered, or harmful.",
+      model_capability_or_routing_gap: "The chosen model or route is not reliable enough for the task.",
+      runtime_dependency_or_config_gap: "Infrastructure, dependency, auth, quota, or configuration caused the issue.",
+      policy_safety_or_governance_gap: "Permission, approval, redaction, audit, or policy enforcement failed.",
+      measurement_or_evaluator_gap: "The system cannot yet detect, score, validate, or explain the failure reliably.",
+      change_release_or_versioning_gap: "A versioned artifact changed without enough guardrails.",
+      product_or_user_journey_gap: "The real cause is product expectations, onboarding, support flow, or UX.",
+      direct_origin: "The cause that first changed the run onto a failing path.",
+      enabling_condition: "A missing guard or background condition that let the failure escape.",
+      amplifier: "A factor that increased blast radius, recurrence, duration, or cost.",
+      downstream_effect: "A later symptom caused by an earlier origin.",
+      confounder: "A suspicious clue that does not actually explain the failure.",
+      ruled_out: "A candidate cause rejected by the evidence.",
+
+      prompt_or_spec_fix: "Change prompts, examples, schemas, or policy fragments.",
+      intent_or_requirement_fix: "Improve intent routing, requirement extraction, or clarification policy.",
+      workflow_or_state_fix: "Change the state machine, gates, handoffs, retries, or completion checks.",
+      tool_or_contract_fix: "Add tool wrappers, validators, result normalizers, or contract tests.",
+      retrieval_or_knowledge_fix: "Update KB, chunking, reranking, source freshness, or citation verification.",
+      memory_or_learning_fix: "Revise memory triggers, confidence thresholds, lift tracking, or expiry.",
+      model_or_routing_fix: "Route to a better model, decompose the task, add verifier, or use human review.",
+      runtime_or_dependency_fix: "Add backoff, fallback, circuit breaker, config gate, or dependency monitor.",
+      safety_or_governance_fix: "Add guardrails, DLP, RBAC, approval workflow, or audit trail.",
+      measurement_or_instrumentation_fix: "Add or repair spans, logs, metrics, evals, sampling, dashboards, or alerts.",
+      change_release_or_versioning_fix: "Add canary, rollback, version diffing, release gate, or migration checks.",
+      product_or_experience_fix: "Improve onboarding, support flow, plan matrix, product UX, or help content.",
+      citation_verifier: "A gate that validates citations against retrieved sources before responding.",
+      pre_call_validator: "A check that blocks malformed tool calls before they execute.",
+      loop_breaker: "A guard that stops repeated work when no new information appears.",
+      telemetry_completeness_monitor: "A monitor that detects missing spans, logs, metrics, or trace context."
+    };
+
+    let activeLayer = "signals";
+    let activeCatalogLayer = "signals";
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function getChipDescription(value) {
+      const key = String(value);
+      if (chipDescriptions[key]) {
+        return chipDescriptions[key];
+      }
+
+      const catalogItem = [
+        ...signalFamilies,
+        ...failureDomains,
+        ...rootFamilies,
+        ...fixFamilies
+      ].find(item => item.title === key);
+
+      if (catalogItem) {
+        return catalogItem.summary || catalogItem.containment || catalogItem.question || "Taxonomy family.";
+      }
+
+      if (key.includes("_")) {
+        return `Taxonomy field or label for ${key.replaceAll("_", " ")}.`;
+      }
+
+      return "Taxonomy family or label.";
+    }
+
+    function chipList(items) {
+      return `<div class="chip-row">${items.map(item => {
+        const description = getChipDescription(item);
+        return `<span class="chip has-tip" tabindex="0" data-tooltip="${escapeHtml(description)}" title="${escapeHtml(description)}" aria-label="${escapeHtml(`${item}: ${description}`)}">${escapeHtml(item)}</span>`;
+      }).join("")}</div>`;
+    }
+
+    function polarToCartesian(cx, cy, r, angleDegrees) {
+      const angleRadians = (angleDegrees - 90) * Math.PI / 180.0;
+      return {
+        x: cx + (r * Math.cos(angleRadians)),
+        y: cy + (r * Math.sin(angleRadians))
+      };
+    }
+
+    function describeArc(cx, cy, rOuter, rInner, startAngle, endAngle) {
+      const outerStart = polarToCartesian(cx, cy, rOuter, endAngle);
+      const outerEnd = polarToCartesian(cx, cy, rOuter, startAngle);
+      const innerStart = polarToCartesian(cx, cy, rInner, startAngle);
+      const innerEnd = polarToCartesian(cx, cy, rInner, endAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+      return [
+        "M", outerStart.x, outerStart.y,
+        "A", rOuter, rOuter, 0, largeArcFlag, 0, outerEnd.x, outerEnd.y,
+        "L", innerStart.x, innerStart.y,
+        "A", rInner, rInner, 0, largeArcFlag, 1, innerEnd.x, innerEnd.y,
+        "Z"
+      ].join(" ");
+    }
+
+    function renderWheel() {
+      const svg = document.getElementById("taxonomyWheel");
+      const legend = document.getElementById("wheelLegend");
+      const sliceSize = 360 / layers.length;
+
+      svg.innerHTML = `
+        <title id="wheelTitle">Agentagon taxonomy wheel</title>
+        <desc id="wheelDesc">Four clickable segments for Signals, Failure Modes, Root Causes, and Fixes.</desc>
+      `;
+
+      layers.forEach((layer, index) => {
+        const start = index * sliceSize;
+        const end = start + sliceSize;
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", describeArc(0, 0, 166, 78, start, end));
+        path.setAttribute("fill", layer.color);
+        path.setAttribute("class", `wheel-slice${layer.id === activeLayer ? " is-active" : ""}`);
+        path.setAttribute("role", "button");
+        path.setAttribute("tabindex", "0");
+        path.setAttribute("aria-label", `Show ${layer.label}`);
+        path.dataset.layer = layer.id;
+        svg.appendChild(path);
+
+        const labelAngle = start + sliceSize / 2;
+        const labelPoint = polarToCartesian(0, 0, 124, labelAngle);
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", labelPoint.x);
+        text.setAttribute("y", labelPoint.y);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.setAttribute("fill", "#ffffff");
+        text.setAttribute("font-weight", "800");
+        text.setAttribute("font-size", "13");
+        text.setAttribute("pointer-events", "none");
+        text.textContent = layer.label;
+        svg.appendChild(text);
+      });
+
+      legend.innerHTML = layers.map(layer => `
+        <button class="legend-button" type="button" data-layer="${layer.id}" aria-pressed="${layer.id === activeLayer}" style="${layer.id === activeLayer ? `background:${layer.color};` : `color:${layer.color};`}">
+          <span class="legend-dot" aria-hidden="true"></span>
+          ${escapeHtml(layer.label)}
+        </button>
+      `).join("");
+
+      svg.querySelectorAll(".wheel-slice").forEach(slice => {
+        slice.addEventListener("click", () => setActiveLayer(slice.dataset.layer));
+        slice.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setActiveLayer(slice.dataset.layer);
+          }
+        });
+      });
+
+      legend.querySelectorAll(".legend-button").forEach(button => {
+        button.addEventListener("click", () => setActiveLayer(button.dataset.layer));
+      });
+    }
+
+    function setActiveLayer(layerId) {
+      activeLayer = layerId;
+      const layer = layers.find(item => item.id === layerId);
+      document.getElementById("wheelCenterTitle").textContent = layer.label;
+      document.getElementById("wheelCenterText").textContent = layer.question;
+      renderWheel();
+      renderLayerDetail();
+      activeCatalogLayer = layerId;
+      renderCatalogControls();
+      renderCatalog();
+    }
+
+    function renderLayerDetail() {
+      const layer = layers.find(item => item.id === activeLayer);
+      const panel = document.getElementById("layerDetail");
+      const linkedItems = getCatalogItems(activeLayer).slice(0, 6).map(item => item.title);
+      panel.innerHTML = `
+        <div class="detail-topline">
+          <div>
+            <span class="eyebrow">Selected layer</span>
+            <h3 class="detail-title">${escapeHtml(layer.label)}</h3>
+          </div>
+          <span class="badge ${layer.badge}">${escapeHtml(layer.label)}</span>
+        </div>
+        <p class="section-intro">${escapeHtml(layer.definition)}</p>
+        <div class="detail-grid">
+          <div class="mini-panel"><strong>Plain-English Question</strong><span>${escapeHtml(layer.question)}</span></div>
+          <div class="mini-panel"><strong>Do Not Use It For</strong><span>${escapeHtml(layer.not)}</span></div>
+          <div class="mini-panel"><strong>Product Job</strong><span>${escapeHtml(layer.use)}</span></div>
+          <div class="mini-panel"><strong>Example Labels</strong>${chipList(layer.examples)}</div>
+        </div>
+        <h3>Required Record Fields</h3>
+        ${chipList(layer.fields)}
+        <h3 style="margin-top: 16px;">Top Families In This Layer</h3>
+        ${chipList(linkedItems)}
+      `;
+    }
+
+    function getCatalogItems(layerId) {
+      if (layerId === "signals") {
+        return signalFamilies;
+      }
+      if (layerId === "failures") {
+        return failureDomains;
+      }
+      if (layerId === "roots") {
+        return rootFamilies;
+      }
+      return fixFamilies;
+    }
+
+    function renderCatalogControls() {
+      document.querySelectorAll("[data-layer-filter]").forEach(button => {
+        const selected = button.dataset.layerFilter === activeCatalogLayer;
+        button.setAttribute("aria-pressed", String(selected));
+      });
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById("catalogGrid");
+      const noResults = document.getElementById("catalogNoResults");
+      const count = document.getElementById("catalogCount");
+      const search = document.getElementById("catalogSearch").value.trim().toLowerCase();
+      const items = getCatalogItems(activeCatalogLayer);
+      const layer = layers.find(item => item.id === activeCatalogLayer);
+      const filtered = items.filter(item => JSON.stringify(item).toLowerCase().includes(search));
+
+      grid.innerHTML = filtered.map(item => {
+        const title = item.title;
+        const summary = item.summary || item.containment;
+        const examplesList = item.examples || [item.durable, item.verification].filter(Boolean);
+        const meta = item.scope || item.fix || item.verification || "Merged taxonomy item";
+        const secondary = item.question || item.source || item.containment || "Use after evidence review.";
+        return `
+          <article class="catalog-card accent-${layer.badge === "signal" ? "blue" : layer.badge === "failure" ? "red" : layer.badge === "root" ? "amber" : "green"}">
+            <header>
+              <span class="badge ${layer.badge}">${escapeHtml(layer.label)}</span>
+              <h3 style="margin-top: 10px;">${escapeHtml(title)}</h3>
+              <p>${escapeHtml(secondary)}</p>
+            </header>
+            <p>${escapeHtml(summary)}</p>
+            ${chipList(examplesList)}
+            <div class="catalog-meta">
+              <span>${escapeHtml(meta)}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      noResults.classList.toggle("is-visible", filtered.length === 0);
+      count.textContent = `${filtered.length} ${filtered.length === 1 ? "item" : "items"} shown`;
+    }
+
+    function renderStories() {
+      const list = document.getElementById("storyList");
+      list.innerHTML = examples.map((example, index) => `
+        <button class="story-button" type="button" data-story="${index}" aria-pressed="${index === 0}">
+          ${escapeHtml(example.title)}
+        </button>
+      `).join("");
+      list.querySelectorAll(".story-button").forEach(button => {
+        button.addEventListener("click", () => renderStory(Number(button.dataset.story)));
+      });
+      renderStory(0);
+    }
+
+    function renderStory(index) {
+      document.querySelectorAll(".story-button").forEach(button => {
+        button.setAttribute("aria-pressed", String(Number(button.dataset.story) === index));
+      });
+
+      const example = examples[index];
+      document.getElementById("storyPanel").innerHTML = `
+        <span class="eyebrow">Example ${index + 1}</span>
+        <h3 class="detail-title">${escapeHtml(example.title)}</h3>
+        <p class="section-intro">${escapeHtml(example.summary)}</p>
+        <div class="story-lane">
+          <div class="story-step"><strong>Signals</strong>${chipList(example.signals)}</div>
+          <div class="story-step"><strong>Origin</strong><span class="muted">${escapeHtml(example.origin)}</span></div>
+          <div class="story-step"><strong>Failure Mode</strong><span class="code-pill">${escapeHtml(example.failure)}</span></div>
+          <div class="story-step"><strong>Root Cause</strong><span class="muted">${escapeHtml(example.root)}</span></div>
+          <div class="story-step"><strong>Fix</strong><span class="muted">${escapeHtml(example.fix)}</span></div>
+        </div>
+      `;
+    }
+
+    document.querySelectorAll("[data-layer-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        activeCatalogLayer = button.dataset.layerFilter;
+        activeLayer = activeCatalogLayer;
+        renderCatalogControls();
+        renderCatalog();
+        renderWheel();
+        renderLayerDetail();
+      });
+    });
+
+    document.getElementById("catalogSearch").addEventListener("input", renderCatalog);
+
+    renderWheel();
+    renderLayerDetail();
+    renderCatalogControls();
+    renderCatalog();
+    renderStories();
+  </script>
+</body>
+</html>
